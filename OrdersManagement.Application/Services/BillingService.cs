@@ -18,7 +18,7 @@ namespace OrdersManagement.Application.Services
         private readonly IHttpClientFactory _httpClientFactory;
 
         public BillingService(
-            IOrderRepository orderRepository,            
+            IOrderRepository orderRepository,
             IBillingRepository billingRepository,
             IOfferRepository offerRepository,
             IMapper mapper,
@@ -31,60 +31,6 @@ namespace OrdersManagement.Application.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        //public async Task AddBillingEntriesByOrderIdAsync()
-        //{
-        //    var orders = await _orderRepository.GetOrdersIdsAsync();
-
-        //    foreach (var order in orders)
-        //    {
-        //        var response = await GetBillingEntriesByOrderIdAsync(order.Value);
-
-        //        if (response is null || response.BillingEntries.IsNullOrEmpty())
-        //        {
-        //            //continue;
-        //            response = BillingEntryFactory();
-        //        }
-
-        //        var filteredBillingEntries = FilterOutExistingBillingEntries(response.BillingEntries);
-
-        //        if (!filteredBillingEntries.Any())
-        //        {
-        //            continue;
-        //        }
-
-        //        var billingEntries = _mapper.Map<List<BillingEntry>>(filteredBillingEntries);
-        //        billingEntries.ForEach(x => x.OrderId = order.Key);
-
-        //        await _billingRepository.SaveBillingEntriesAsync(billingEntries);
-        //    }
-        //}
-
-        //public async Task AddBillingEntriesByOfferIdAsync()
-        //{
-        //    var offers = await _offerRepository.GetOfferIdsAsync();
-
-        //    foreach (var offer in offers)
-        //    {
-        //        var response = await GetBillingEntriesByOfferIdAsync(offer.Value);
-
-        //        if (response is null || response.BillingEntries.IsNullOrEmpty())
-        //        {
-        //            continue;
-        //        }
-
-        //        var filteredBillingEntries = FilterOutExistingBillingEntries(response.BillingEntries);
-
-        //        if (!filteredBillingEntries.Any())
-        //        {
-        //            continue;
-        //        }
-
-        //        var billingEntries = _mapper.Map<List<BillingEntry>>(filteredBillingEntries);
-        //        billingEntries.ForEach(x => x.OfferId = offer.Key);
-
-        //        await _billingRepository.SaveBillingEntriesAsync(billingEntries);
-        //    }
-        //}
         public async Task AddBillingEntriesByOrderIdAsync()
         {
             var orders = await _orderRepository.GetOrdersIdsAsync();
@@ -108,7 +54,11 @@ namespace OrdersManagement.Application.Services
 
                 if (response is null || response.BillingEntries.IsNullOrEmpty())
                 {
-                    response = BillingEntryFactory();
+                    continue;
+
+                    // If there is no any billingEntry from apiResponse you can uncomment it and it will create billingEntry example,
+                    // keep in mind that you need to have same string OrderId in dbo.OrderTable as in line 105
+                    // response = BillingEntryFactory(); 
                 }
 
                 var filteredBillingEntriesList = new List<BillingEntryDto>();
@@ -182,56 +132,6 @@ namespace OrdersManagement.Application.Services
                 throw;
             }
         }
-        //private async Task<BillingEntriesResponse?> GetBillingEntriesByOrderIdAsync(string orderId)
-        //{
-        //    try
-        //    {
-        //        var httpClient = _httpClientFactory.CreateClient();
-        //        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiConfiguration.token);
-
-        //        var response = await httpClient.GetAsync($"{ApiConfiguration.baseUrl}/billing/billing-entries?order.id={orderId}");
-
-        //        if (!response.IsSuccessStatusCode)
-        //        {
-        //            throw new Exception($"Error occured while requesting for billing entries for orderId={orderId} - StatusCode={response.StatusCode} Reason={response.ReasonPhrase}");
-        //        }
-
-        //        var content = await response.Content.ReadAsStringAsync();
-        //        var billingEntriesResponse = JsonConvert.DeserializeObject<BillingEntriesResponse>(content);
-
-        //        return billingEntriesResponse;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
-
-        //private async Task<BillingEntriesResponse?> GetBillingEntriesByOfferIdAsync(string offerId)
-        //{
-        //    try
-        //    {
-        //        var httpClient = _httpClientFactory.CreateClient();
-
-        //        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiConfiguration.token);
-
-        //        var response = await httpClient.GetAsync($"{ApiConfiguration.baseUrl}/billing/billing-entries?offer.id={offerId}");
-
-        //        if (!response.IsSuccessStatusCode)
-        //        {
-        //            throw new Exception($"Error occured while requesting for billing entries for offerId={offerId} - StatusCode={response.StatusCode} Reason={response.ReasonPhrase}");
-        //        }
-
-        //        var content = await response.Content.ReadAsStringAsync();
-        //        var billingEntriesResponse = JsonConvert.DeserializeObject<BillingEntriesResponse>(content);
-
-        //        return billingEntriesResponse;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
 
         private IEnumerable<BillingEntryDto> FilterOutExistingBillingEntries(ICollection<BillingEntryDto> billingEntries)
         {
