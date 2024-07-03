@@ -54,7 +54,11 @@ namespace OrdersManagement.Application.Services
 
                 if (response is null || response.BillingEntries.IsNullOrEmpty())
                 {
-                    response = BillingEntryFactory();
+                    continue;
+
+                    // If there is no any billingEntry from apiResponse you can uncomment it and it will create billingEntry example,
+                    // keep in mind that you need to have same string OrderId in dbo.OrderTable as in line 105
+                    // response = BillingEntryFactory(); 
                 }
 
                 var filteredBillingEntriesList = new List<BillingEntryDto>();

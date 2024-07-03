@@ -68,9 +68,6 @@ namespace OrdersManagement.Infrastructure.Data
                  .HasForeignKey(x => x.OrderId)
                  .OnDelete(DeleteBehavior.Restrict);
 
-                x.Property(x => x.OrderId)
-                .IsRequired();
-
                 x.HasOne(x => x.Offer)
                 .WithMany(x => x.BillingEntries)
                 .HasForeignKey(x => x.OfferId)
@@ -85,6 +82,12 @@ namespace OrdersManagement.Infrastructure.Data
 
                 x.HasKey(x => x.Id)
                 .HasName("PK_offer_lista");
+
+                x.Property(x => x.OfferId)
+                .IsRequired();
+
+                x.Property(x => x.Name)
+                .IsRequired(false);
             });
         }
     }
